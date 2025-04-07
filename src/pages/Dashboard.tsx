@@ -31,10 +31,17 @@ export default function Dashboard() {
         </button>
 
         <button
-          className="bg-yellow-600 hover:bg-yellow-700 rounded-2xl p-6 text-lg font-semibold shadow-lg transition"
-          onClick={() => navigate("/operacoes")}
+          className="bg-emerald-600 hover:bg-emerald-700 rounded-2xl p-6 text-lg font-semibold shadow-lg transition"
+          onClick={() => navigate("/deposito")}
         >
-          Adicionar / Remover
+          Depositar Dinheiro
+        </button>
+
+        <button
+          className="bg-rose-600 hover:bg-rose-700 rounded-2xl p-6 text-lg font-semibold shadow-lg transition"
+          onClick={() => navigate("/saque")}
+        >
+          Sacar Dinheiro
         </button>
 
         <button

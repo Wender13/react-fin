@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
+import CpfInput from "../components/inputs/CpfInput";
 
 export default function Register() {
   const [login, setLogin] = useState("");
@@ -12,6 +13,26 @@ export default function Register() {
   const [cpf, setCpf] = useState("");
 
   const navigate = useNavigate();
+
+  function isValidCPF(cpf: string): boolean {
+    cpf = cpf.replace(/[^\d]+/g, "");
+
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += parseInt(cpf[i]) * (10 - i);
+    let firstCheck = (sum * 10) % 11;
+    if (firstCheck === 10 || firstCheck === 11) firstCheck = 0;
+    if (firstCheck !== parseInt(cpf[9])) return false;
+
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += parseInt(cpf[i]) * (11 - i);
+    let secondCheck = (sum * 10) % 11;
+    if (secondCheck === 10 || secondCheck === 11) secondCheck = 0;
+    if (secondCheck !== parseInt(cpf[10])) return false;
+
+    return true;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,8 +47,15 @@ export default function Register() {
       return;
     }
 
+    if (!isValidCPF(cpf)) {
+      alert("CPF inválido.");
+      return;
+    }
+
+    const rawCpf = cpf.replace(/[^\d]+/g, "");
+
     try {
-      await registerUser({ login, password, name, email, cpf });
+      await registerUser({ login, password, name, email, cpf: rawCpf });
       alert("Registro realizado com sucesso!");
       navigate("/login");
     } catch (error) {
@@ -94,14 +122,9 @@ export default function Register() {
           className="w-full p-2 rounded bg-zinc-700 text-white placeholder:text-zinc-400"
           required
         />
-        <input
-          type="text"
-          placeholder="CPF"
-          value={cpf}
-          onChange={(e) => setCpf(e.target.value)}
-          className="w-full p-2 rounded bg-zinc-700 text-white placeholder:text-zinc-400"
-          required
-        />
+
+        {/* CPF formatado visualmente */}
+        <CpfInput value={cpf} onChange={setCpf} />
 
         <button
           type="submit"
