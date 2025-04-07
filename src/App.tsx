@@ -9,6 +9,7 @@ import Operacoes from "./pages/Operacoes";
 function App() {
   return (
     <Router>
+      <Analytics />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
